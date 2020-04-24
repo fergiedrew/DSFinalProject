@@ -4,6 +4,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Random;
+
+// To wipe screen: 
+// System.out.print("\033[H\033[2J");
+// System.out.flush();
 
 public class Game {
     static ArrayList<Word> cmupron;
@@ -12,7 +17,10 @@ public class Game {
        // playGame();
        readCMUPron("cmupron.txt");
        readPoems("Shakepeare.txt");
-       System.out.println(poems.get(13).toString());
+       Random random = new Random();
+       int index = random.nextInt(poems.size() - 1);
+       poems.get(index).takeOutRandomLine().printPoem();
+       
         
        //System.out.println(cmupron.get(13).word);
     }
@@ -60,4 +68,5 @@ public class Game {
             System.out.format("IOException %s\n", f);
         }
     }
+    
 }
