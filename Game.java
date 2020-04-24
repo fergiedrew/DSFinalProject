@@ -11,10 +11,12 @@ public class Game {
     public static void main(String[] args) {
        // playGame();
        readCMUPron("cmupron.txt");
+       readPoems("Shakepeare.txt");
+       System.out.println(poems.get(13).toString());
+        
        //System.out.println(cmupron.get(13).word);
-
     }
-    static void readCMUPron(String cmu){
+    static void readCMUPron(String cmu){ // Fills the cmupron field with the dictionary of cmupron info
         try {
             cmupron = new ArrayList<Word>();
             FileReader f = new FileReader(cmu);
@@ -28,8 +30,34 @@ public class Game {
                 cmuline = reader.readLine();
             }
 
-        }   catch (IOException e){
+        }   catch (IOException e) {
                 System.out.format("IOException %s\n", e);
+        }
+    }
+    static void readPoems(String allPoems) { //fills the poems list with all of the shakespeare sonnets
+        try {
+            poems = new ArrayList<Poem>();
+            FileReader f = new FileReader(allPoems);
+            BufferedReader reader = new BufferedReader(f);
+            String poemLine = reader.readLine();
+            while (poemLine != null) { 
+                if (poemLine.length() < 10) {
+                    poemLine = reader.readLine();
+                    continue;
+                }
+                String wholePoem = "";
+                for(int i = 0; i < 14; i++) { // Loops 14 times for each line of a sonnet
+                    wholePoem += poemLine + "\n";
+                    poemLine = reader.readLine();
+                }
+                Poem newPoem = new Poem(wholePoem);
+                poems.add(newPoem);
+                poemLine = reader.readLine();
+
+            }
+            
+        } catch (IOException f) {
+            System.out.format("IOException %s\n", f);
         }
     }
 }
