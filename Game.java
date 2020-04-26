@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Random;
+import java.util.Scanner;
 
 // To wipe screen: 
 // System.out.print("\033[H\033[2J");
@@ -17,9 +18,7 @@ public class Game {
        // playGame();
        readCMUPron("cmupron.txt");
        readPoems("Shakepeare.txt");
-       Random random = new Random();
-       int index = random.nextInt(poems.size() - 1);
-       poems.get(index).takeOutRandomLine().printPoem();
+       playGame();
        
         
        //System.out.println(cmupron.get(13).word);
@@ -67,6 +66,33 @@ public class Game {
         } catch (IOException f) {
             System.out.format("IOException %s\n", f);
         }
+    }
+    static void playGame(){
+        Scanner scanner = new Scanner(System.in);
+        Random random = new Random();
+        int index = random.nextInt(poems.size() - 1);
+        System.out.print("To Begin Game, Type Play:");
+        String beginword = scanner.nextLine().toLowerCase().trim();
+        if (beginword.equals("play")) {
+            System.out.println("Here's how the game works: ");
+            System.out.print("  You will be given a random shakepeare sonnet \n  To test out your poet skills you will be asked to come up with a line\n");
+            System.out.println("Here we go!");
+            System.out.print("Type ready when ready: ")
+            String readyword = scanner.nextLine().toLowerCase().trim();
+            if (readyword.equals("ready")) {
+                poems.get(index).takeOutRandomLine().printPoem();
+            }
+
+            
+            
+            
+            
+        } else {
+            System.out.println("Aight, I see how it is");
+        }
+        
+
+
     }
     
 }

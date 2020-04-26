@@ -39,6 +39,9 @@ public class Poem {
             System.out.println(this.poem.get(i));
         }
     }
+    public Boolean matchesMeterAndRhyme(int intendedstresspattern, Word wordtorhymewith) {
+
+    }
 
 
     public String toString(){
