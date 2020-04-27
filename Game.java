@@ -6,13 +6,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.HashMap;
+
 
 // To wipe screen: 
 // System.out.print("\033[H\033[2J");
 // System.out.flush();
 
 public class Game {
-    static ArrayList<Word> cmupron;
+    static HashMap<String, Word> cmupron;
     static ArrayList<Poem> poems;
     public static void main(String[] args) {
        // playGame();
@@ -25,7 +27,7 @@ public class Game {
     }
     static void readCMUPron(String cmu){ // Fills the cmupron field with the dictionary of cmupron info
         try {
-            cmupron = new ArrayList<Word>();
+            cmupron = new HashMap<String, Word>();
             FileReader f = new FileReader(cmu);
             BufferedReader reader = new BufferedReader(f);
             String cmuline = reader.readLine();
@@ -33,7 +35,7 @@ public class Game {
             while (cmuline != null) {
                 cmuline.trim();
                 Word x = new Word(cmuline);
-                cmupron.add(x);
+                cmupron.put(x.word.toLowerCase(), x);
                 cmuline = reader.readLine();
             }
 
@@ -71,18 +73,29 @@ public class Game {
         Scanner scanner = new Scanner(System.in);
         Random random = new Random();
         int index = random.nextInt(poems.size() - 1);
+        int linenumber = random.nextInt(13);
+        Poem gamepoem = poems.get(index);
         System.out.print("To Begin Game, Type Play:");
         String beginword = scanner.nextLine().toLowerCase().trim();
         if (beginword.equals("play")) {
             System.out.println("Here's how the game works: ");
             System.out.print("  You will be given a random shakepeare sonnet \n  To test out your poet skills you will be asked to come up with a line\n");
             System.out.println("Here we go!");
-            System.out.print("Type ready when ready: ")
+            System.out.print("Type ready when ready: ");
             String readyword = scanner.nextLine().toLowerCase().trim();
             if (readyword.equals("ready")) {
-                poems.get(index).takeOutRandomLine().printPoem();
+                System.out.print("\n\n\n");
+                gamepoem.takeOutLine(linenumber).printPoem();
             }
-
+            System.out.print("\n\n What line shall we put?:");
+            String inputline = scanner.nextLine().toLowerCase().replaceAll("[)(\\[\\]!,.?{}:;\"\\'\\-]", "");
+            if (gamepoem.lineFits(inputline, linenumber)) {
+                System.out.println("Yes! You did it! You are smarter then Shakespeare!");
+            } else {
+                System.out.println("Sorry Sweetie! You're not as smart as Shakespeare");
+            }
+            
+            
             
             
             
