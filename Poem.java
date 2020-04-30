@@ -45,7 +45,8 @@ public class Poem {
 
     public Boolean lineFits(String inputline, int linenumber) {
         String inputstresspattern = "";
-        String[] stringsOnLineShakespeare = this.poem.get(linenumber).replaceAll("[)(\\[\\]!,.?{}:;\"\\'\\-]", "").split(" ");
+        String[] stringsOnLineShakespeare = this.poem.get(linenumber).replaceAll("[)(\\[\\]!,.?{}:;\"\\'\\-]", "")
+                .split(" ");
         String[] stringsOnInputLine = inputline.toLowerCase().replaceAll("[)(\\[\\]!,.?{}:;\"\\'\\-]", "").split(" ");
         ArrayList<Word> wordsOnInputLine = new ArrayList<Word>();
 
@@ -69,47 +70,80 @@ public class Poem {
         Word lastWordShakespeare = Game.cmupron.get(stringsOnLineShakespeare[stringsOnLineShakespeare.length - 1]);
         Word lastWordInputLine = wordsOnInputLine.get(wordsOnInputLine.size() - 1);
 
-        if (lastWordShakespeare == null) { // Check if the target word is in cmupron
-            System.out.println("Couldn't find shakespeare's word! "
-                    + stringsOnLineShakespeare[stringsOnLineShakespeare.length - 1]);
-            return false;
-        } else { // Check if the line has the correct stress pattern and rhymes with the target
-                 // word
-            if (areCloseEnough(this.stresspattern, inputstresspattern) && lastWordInputLine.endsWith(lastWordShakespeare.getRhymeNeeds())) {
+        if (areCloseEnough(this.stresspattern, inputstresspattern)) {
+            if (lastWordInputLine.endsWith(lastWordShakespeare.getRhymeNeeds()) || this.checkOtherRhyme(linenumber, inputline)) {
                 return true;
-
             } else {
-                System.out.println("The stress pattern you gave was " + inputstresspattern);
-                System.out.println(lastWordInputLine.word + " for " + lastWordShakespeare.word);
+                System.out.println("That line did not rhyme!");
                 return false;
-            }
-        }
+            } 
+        } else {
+            System.out.println(this.stresspattern + " did not work with " + inputstresspattern);
+            return false;
+        } 
     }
+
+    
+
     public static String getLastWord(String line) {
-        String [] arrayofstrings = line.trim().toLowerCase().replaceAll("[)(\\[\\]!,.?{}:;\"\\'\\-]", "").split(" ");
+        String[] arrayofstrings = line.trim().toLowerCase().replaceAll("[)(\\[\\]!,.?{}:;\"\\'\\-]", "").split(" ");
         return arrayofstrings[arrayofstrings.length - 1];
 
     }
+
     public String toString() {
         return this.poem.toString() + "\n" + this.rhymepattern + " " + this.stresspattern;
 
     }
-    public Boolean areCloseEnough(String stresspattern1, String stresspattern2) { // The stress pattern is close enough if it is the same length and it has at least 4 matching stresses
+
+    public Boolean areCloseEnough(String stresspattern1, String stresspattern2) { // The stress pattern is close enough
+                                                                                  // if it is the same length and it has
+                                                                                  // at least 4 matching stresses
         int sumofmatchingsyllables = 0;
         if (stresspattern1.length() != stresspattern2.length()) {
             return false;
         }
         for (int i = 0; i < stresspattern1.length(); i++) {
-            if (stresspattern1.charAt(i) == stresspattern2.charAt(i)) sumofmatchingsyllables += 1;
+            if (stresspattern1.charAt(i) == stresspattern2.charAt(i))
+                sumofmatchingsyllables += 1;
         }
         if (sumofmatchingsyllables > 3) {
             return true;
         } else {
             return false;
         }
-        
-
 
     }
 
+    public Boolean checkOtherRhyme(int linenumber, String line) { // Check if a certain line fits in with the other
+                                                                  // lines in
+                                                                  // the poem i.e. rhymes with another B or A, etc. rhyme
+        String lastWord = getLastWord(line);
+        Word theLastWord = Game.cmupron.get(lastWord);
+        char rhymeType = this.rhymepattern.charAt(linenumber);
+        int sameRhymeTypeIndex = 0;
+        for (int i = 0; i < this.rhymepattern.length(); i++) { // Finds the line number of the other line the inputline
+                                                               // needs to rhyme with
+            if (i == linenumber) {
+                continue;
+            }
+            if (rhymeType == rhymepattern.charAt(i)) {
+                sameRhymeTypeIndex = i;
+            }
+        }
+        if (Game.cmupron.containsKey(getLastWord(this.poem.get(sameRhymeTypeIndex)))) { // Checks if we can check that
+                                                                                        // other line
+            Word otherRhymeWord = Game.cmupron.get(getLastWord(this.poem.get(sameRhymeTypeIndex)));
+
+            if (theLastWord.endsWith(otherRhymeWord.getRhymeNeeds())) { // Checks if the input line's last word rhymes
+                                                                        // with the other line's last word
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false; // If the other line is unusable then it will return false
+        }
+
+    }
 }
