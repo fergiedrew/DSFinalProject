@@ -71,7 +71,9 @@ public class Poem {
         Word lastWordInputLine = wordsOnInputLine.get(wordsOnInputLine.size() - 1);
 
         if (areCloseEnough(this.stresspattern, inputstresspattern)) {
-            if (lastWordInputLine.endsWith(lastWordShakespeare.getRhymeNeeds()) || this.checkOtherRhyme(linenumber, inputline)) {
+            System.out.println("The stress pattern was correct!");
+            if (this.checkOtherRhyme(linenumber, inputline) || lastWordInputLine.endsWith(lastWordShakespeare.getRhymeNeeds())) {
+                System.out.println("That line sure did fit in the rhyme scheme!");
                 return true;
             } else {
                 System.out.println("That line did not rhyme!");
@@ -92,7 +94,7 @@ public class Poem {
     }
 
     public String toString() {
-        return this.poem.toString() + "\n" + this.rhymepattern + " " + this.stresspattern;
+        return this.poem.toString() + "\n" + this.rhymepattern + " " + this.stresspattern + this.usablelines;
 
     }
 
@@ -107,7 +109,7 @@ public class Poem {
             if (stresspattern1.charAt(i) == stresspattern2.charAt(i))
                 sumofmatchingsyllables += 1;
         }
-        if (sumofmatchingsyllables > 3) {
+        if (sumofmatchingsyllables > 1) {
             return true;
         } else {
             return false;
@@ -146,4 +148,26 @@ public class Poem {
         }
 
     }
+    public Poem takeOutLastWordOfLine(int linenumber) { // Takes out the last word of the line of a poem at the given linenumber and replaces it with ____ and returns this poem
+        Poem gamepoem = new Poem(); // Make new poem
+        String line = this.poem.get(linenumber); // Gets original line
+        String[] linearray = line.split(" "); // makes an array
+        String newline = ""; // Instantiate the newline string
+        for (int i = 0; i < linearray.length - 1; i++) {  // Runs for every word except the last one
+            newline += linearray[i] + " ";
+        }
+        newline += "____"; // adds blank instead of last word
+        for (int i = 0; i < this.poem.size(); i++) {  // adds the orginal lines to the new poem, except for the modified line
+            if (i == linenumber) {
+                gamepoem.poem.add(newline);
+            } else {
+                gamepoem.poem.add(this.poem.get(i));
+            }
+        }
+        gamepoem.usablelines = this.usablelines;
+        return gamepoem;
+
+
+    }
+
 }

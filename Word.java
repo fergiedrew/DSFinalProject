@@ -6,6 +6,8 @@ public class Word {
   ArrayList<String> phonemes;
   ArrayList<Integer> stresses;
 
+
+
   public Word(String cmuline) {
     String[] parts = cmuline.split(" ");
     this.word = parts[0].toLowerCase().replaceAll("[)(\\[\\]!,.?{} :;\"\\'\\-]", "");

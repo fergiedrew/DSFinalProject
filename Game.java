@@ -19,7 +19,13 @@ public class Game {
     public static void main(String[] args) {
         readCMUPron("cmupron.txt");
         readPoems("Shakepeare.txt");
-        playGame();
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Do you want to play easy or hard:");
+        if (scanner.nextLine().equals("easy")) {
+            playGameEasy();
+        } else {
+            playGame();
+        }
     }
 
     static void readCMUPron(String cmu) { // Fills the cmupron field with the dictionary of cmupron info
@@ -76,9 +82,11 @@ public class Game {
     static void playGame() {
         Scanner scanner = new Scanner(System.in);
         Random random = new Random();
-        int index = random.nextInt(poems.size() - 1);
+        int index = random.nextInt(poems.size());
         Poem gamepoem = poems.get(index);
-        int linenumber = random.nextInt(gamepoem.usablelines.size());
+        int randlistnumber = random.nextInt(gamepoem.usablelines.size());
+        int linenumber = gamepoem.usablelines.get(randlistnumber);
+
         System.out.print("To Begin Game, Type Play:");
         String beginword = scanner.nextLine().toLowerCase().trim();
         if (beginword.equals("play")) {
@@ -96,13 +104,21 @@ public class Game {
             String inputline = scanner.nextLine().toLowerCase().replaceAll("[)(\\[\\]!,.?{}:;\"\\'\\-]", "");
             if (gamepoem.lineFits(inputline, linenumber)) {
                 System.out.println("Yes! You did it! You are smarter then Shakespeare!");
-            } else {
-                System.out.println("Sorry Sweetie! You're not as smart as Shakespeare");
             }
 
         } else {
             System.out.println("Aight, I see how it is");
         }
+
+    }
+    static void playGameEasy() {
+        Random random = new Random();
+        Poem gamepoem = poems.get(random.nextInt(poems.size()));
+        int randlistnumber = random.nextInt(gamepoem.usablelines.size());
+        int linenumber = gamepoem.usablelines.get(randlistnumber);
+        gamepoem.takeOutLastWordOfLine(linenumber).printPoem();
+        
+        
 
     }
 
