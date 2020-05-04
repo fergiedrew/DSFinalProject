@@ -112,13 +112,22 @@ public class Game {
 
     }
     static void playGameEasy() {
+        Scanner scanner = new Scanner(System.in);
         Random random = new Random();
         Poem gamepoem = poems.get(random.nextInt(poems.size()));
         int randlistnumber = random.nextInt(gamepoem.usablelines.size());
         int linenumber = gamepoem.usablelines.get(randlistnumber);
-        gamepoem.takeOutLastWordOfLine(linenumber).printPoem();
-        
-        
+        gamepoem.replaceLastWordOfLineWith(linenumber, "_____").printPoem();
+        System.out.print("\n\n\nWhat word shall we put in the blank?:");
+        String inputword = scanner.nextLine();
+        Poem playerpoem = gamepoem.replaceLastWordOfLineWith(linenumber, inputword);
+        if (gamepoem.lineRhymes(playerpoem.poem.get(linenumber), linenumber)) {
+            System.out.println("Your word worked! Great Job!");
+        } else {
+            System.out.println("Sorry! That did not work! Better luck next time sweetie!");
+        }
+
+
 
     }
 

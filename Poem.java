@@ -84,6 +84,20 @@ public class Poem {
             return false;
         } 
     }
+    public Boolean lineRhymes(String inputline, int linenumber) { // Check if a line rhymes with the rest of the poem.
+        Word lastWordInputLine = Game.cmupron.get(getLastWord(inputline.toLowerCase().replaceAll("[)(\\[\\]!,.?{}:;\"\\'\\-]", "")));
+        Word lastWordShakespeare = Game.cmupron.get(getLastWord(this.poem.get(linenumber).replaceAll("[)(\\[\\]!,.?{}:;\"\\'\\-]", "")));
+        if (lastWordInputLine == null) {
+            System.out.println(getLastWord(inputline) + " Did not work as a real word!");
+            return false;
+        } else {
+            if (this.checkOtherRhyme(linenumber, inputline) || lastWordInputLine.endsWith(lastWordShakespeare.getRhymeNeeds())) {
+                return true;
+            } else return false;
+        }
+
+
+    }
 
     
 
@@ -109,12 +123,11 @@ public class Poem {
             if (stresspattern1.charAt(i) == stresspattern2.charAt(i))
                 sumofmatchingsyllables += 1;
         }
-        if (sumofmatchingsyllables > 1) {
+        if (sumofmatchingsyllables > 3) {
             return true;
         } else {
             return false;
         }
-
     }
 
     public Boolean checkOtherRhyme(int linenumber, String line) { // Check if a certain line fits in with the other
@@ -148,7 +161,7 @@ public class Poem {
         }
 
     }
-    public Poem takeOutLastWordOfLine(int linenumber) { // Takes out the last word of the line of a poem at the given linenumber and replaces it with ____ and returns this poem
+    public Poem replaceLastWordOfLineWith(int linenumber, String word) { // Takes out the last word of the line of a poem at the given linenumber and replaces it with ____ and returns new poem
         Poem gamepoem = new Poem(); // Make new poem
         String line = this.poem.get(linenumber); // Gets original line
         String[] linearray = line.split(" "); // makes an array
@@ -156,7 +169,7 @@ public class Poem {
         for (int i = 0; i < linearray.length - 1; i++) {  // Runs for every word except the last one
             newline += linearray[i] + " ";
         }
-        newline += "____"; // adds blank instead of last word
+        newline += word; // adds blank instead of last word
         for (int i = 0; i < this.poem.size(); i++) {  // adds the orginal lines to the new poem, except for the modified line
             if (i == linenumber) {
                 gamepoem.poem.add(newline);
